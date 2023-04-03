@@ -1,0 +1,57 @@
+  <!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <nav>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="database.php">Orders</a></li>
+        <li><a href="users.html">Registered Users</a></li>
+      </ul>
+    </nav>
+    <h1>Approved Orders</h1>
+	<table>
+		<thead>
+			<tr>
+			 	<th>Phone Number</th>
+				<th>Product Name</th>
+				<th>Quantity</th>
+			</tr>
+		</thead>
+		<tbody>
+			<?php
+				// Replace these variables with your own database credentials
+				$database_name = "ussd";
+				$collection_users_name = "approved";
+
+				// Create connection (if not already created)
+				if (!isset($client)) {
+					$client = new MongoDB\Client("mongodb+srv://nmurigi:2461314454@cluster0.3tythl5.mongodb.net/?retryWrites=true&w=majority");
+					$database = $client->selectDatabase($database_name);
+				}
+
+				// Select the users collection
+				$collection_users = $database->selectCollection($collection_users_name);
+
+				// Fetch items from the users collection
+				$cursor = $collection_users->find([]);
+
+				foreach ($cursor as $document) {
+				    echo "<tr>";
+				    echo "<td>" . $document["phone_number"] . "</td>";
+				    echo "<td>" . $document["productname"] . "</td>";
+				    echo "<td>" . $document["quantity"] . "</td>";
+				    echo "</tr>";
+				}
+
+				// Close connection (optional, as MongoDB automatically closes connections at the end of script execution)
+				unset($client);
+			?>
+		</tbody>
+	</table>
+
+</html>
